@@ -11,7 +11,7 @@ using Sensors;
 namespace Sensors.Migrations
 {
     [DbContext(typeof(DataModel))]
-    [Migration("20220225105851_InitialCreate")]
+    [Migration("20220225195748_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

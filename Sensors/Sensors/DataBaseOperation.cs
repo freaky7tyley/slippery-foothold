@@ -50,50 +50,40 @@ namespace Sensors
             }
         }
 
-        static public void addUnits(string[] unittexts)
+        static public MeasurementType addMeasurementTypeIfNotExists(DataModel db, string text)
         {
-            using (var db = new DataModel())
-            {
-                foreach (var u in unittexts)
-                    db.Units.Add(new Unit() { unit = u });
-
-                db.SaveChanges();
-            }
-        }
-        static public MeasurementType addMeasurementType(string text)
-        {
-            using (var db = new DataModel())
-            {
-
+                var iemt = db.MeasurementTypes.Where(x => x.measurementType.Equals(text));
+                if (iemt.Count() > 0)
+                    return iemt.First();
+                
                 var mt=db.MeasurementTypes.Add(new MeasurementType() { measurementType=text }).Entity;
-
+                Console.WriteLine("MeasurementType '{0}' added ", mt.measurementType);
                 db.SaveChanges();
                 return mt;
-            }
         }
-        static public Unit getUnit(DataModel db, string unit)
+
+        static public Unit addUnitIfNotExists(DataModel db, string unit)
         {
-            return db.Units.Where(x => x.unit.Equals(unit)).First();
+            var ieu = db.Units.Where(x => x.unit.Equals(unit));
+            if (ieu.Count() > 0)
+                return ieu.First();
+
+            var u = db.Units.Add(new Unit() { unit = unit }).Entity;
+            Console.WriteLine("Unit '{0}' added ", u.unit);
+            db.SaveChanges();
+            return u;
         }
 
         static public void addMeasurement(int sensorId, double value, string unit, string measurementType)
         {
             using (var db = new DataModel())
             {
-                var _unit = getUnit(db, unit);
+                var _unit = addUnitIfNotExists(db, unit);
                 var sens = db.Sensors.Where(x => x.sensorID == sensorId).First();
-
-                MeasurementType mt;
-                    var tt= db.MeasurementTypes.Where(x => x.measurementType.Equals(measurementType));
-                if(tt.Count()<1)
-                {
-                    mt=addMeasurementType(measurementType);
-                }else
-
-                mt=tt.First();
+                var mt = addMeasurementTypeIfNotExists(db,measurementType);
 
                 Measurement m = new Measurement() { timestamp = DateTime.Now, sensorFK = sens, value = value, unitFK = _unit, measurementTypeFK=mt };
-
+                
                 db.Measurements.Add(m);
                 db.SaveChanges();
             }
