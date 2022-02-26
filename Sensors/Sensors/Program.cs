@@ -1,11 +1,19 @@
-﻿using System;
+﻿//#define SWIPE_DB_ON_START
+
+using System;
 using System.Linq;
 using System.Net;
 using Newtonsoft.Json;
+
+
 namespace Sensors
 {
+
+
     internal class Program
     {
+
+
         const string celsius = "°C", percent = "%", microgrammpercubicmeter="µg/m3";
 
         static int TestMySensorID = -1;
@@ -47,7 +55,12 @@ namespace Sensors
         private static void Main()
         {
             DbOperation.clearData();
+
+#if SWIPE_DB_ON_START
             initialInsertions();
+#else
+            DbOperation.readMeasurements();
+#endif
 
             string airrohrUrl = DbOperation.getSensorUrl(sensorId: TestMySensorID);
 

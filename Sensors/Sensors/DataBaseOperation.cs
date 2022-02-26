@@ -5,15 +5,24 @@ namespace Sensors
     {
         static public void readMeasurements()
         {
-            using (var db = new DataModel())
-            {
-                foreach (var m in db.Measurements)
-                {
-                    IotSensor sensor = db.IotSensors.Where(s => s.sensorFK.sensorID == m.sensorFK.sensorID).First();
+            var db = new DataModel();
 
-                    Console.WriteLine("{4}:{0} {1}: {2}{3}", sensor.sensorFK.name, m.timestamp, m.value, m.unitFK.unit, m.measurementID);
-                }
-            }
+            var data = db.MeasurementTypes
+            .Join(
+                db.Measurements,
+                m => m,
+                y => y.measurementTypeFK,
+                (m, y) => new {m,y})
+            .Join(
+                db.Units,
+                t => t.unitFK,
+                n=>n,
+                (t,n)=> new {}).ToList();
+             
+                foreach (var m in data)
+                    Console.WriteLine("{0} {1} {2} {3}", m.measurementID, m.timestamp, m.value, m.measurementType);
+
+        
         }
 
         static public string getSensorUrl(int sensorId)
