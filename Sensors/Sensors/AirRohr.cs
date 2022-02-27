@@ -9,7 +9,7 @@ namespace Sensors
         //bekanntes Problem bei Airrohr, der DHT22 wird nicht immer zuverlässig ausgewertet, dann enthält die Json response KEINE value_type 'temperature' & 'humidity'
 
         string url;
-        const string jsonDataPage = "/data.json"; 
+        const string jsonDataPage = "/data.json";
 
         public ValueType Temperature { get; private set; }
         public ValueType Humidity { get; private set; }
@@ -45,7 +45,7 @@ namespace Sensors
             {
                 jsonString = rd.ReadToEnd();
             }
-       }
+        }
 
         protected override void ParseJsonString()
         {
@@ -64,11 +64,11 @@ namespace Sensors
         {
             try
             {
-                //GetDataFromFile();
-                await GetDataFromSensor();
+                GetDataFromFile();
+                //await GetDataFromSensor();
 
                 if (printRaw)
-                    Console.WriteLine("this is my data: {0}",jsonString);
+                    Console.WriteLine("this is my data: {0}", jsonString);
             }
             catch (Exception ex)
             {
@@ -84,7 +84,7 @@ namespace Sensors
             catch (Exception ex)
             {
                 //no sequence, beim fehlerhaften lesen des angeschlossenen DHT22
-                Console.WriteLine("Error parsing data: {0}",ex.Message);
+                Console.WriteLine("Error parsing data: {0}", ex.Message);
                 return false;
             }
             return true;

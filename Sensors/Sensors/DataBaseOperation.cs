@@ -18,14 +18,14 @@ namespace Sensors
                                m.measurementTypeFK.measurementType,
                                m.value,
                                m.unitFK.unit,
-                               m.sensorFK.name 
+                               m.sensorFK.name
                            };
 
 
                 foreach (var m in data)
                     Console.WriteLine("{0}\t{1}\t{2:dd.MM.yy HH:MM:ss}\t{3}\t{4}\t{5}", m.measurementType, m.measurementID, m.timestamp, m.value, m.unit, m.name);
             }
-        
+
         }
 
         static public string getSensorUrl(int sensorId)
@@ -41,11 +41,23 @@ namespace Sensors
                                 i.url
                             }.url).First();
                 return data;
+            }
+        }
 
-   /*             var sns = db.Sensors.Where(x => x.sensorID == sensorId).First();
+        static public int getIOTthingID(string url)
+        {
+            using (var db = new DataModel())
+            {
 
-                return db.IotSensors.Where(x => x.sensorFK.sensorID == sensorId).First().url;
-     */       }
+                var data = (from i in db.IotSensors
+                            join s in db.Sensors on i.sensorFK equals s
+                            where i.url.Equals(url)
+                            select new
+                            {
+                                s.sensorID
+                            }.sensorID).First();
+                return data;
+            }
         }
 
         /// <summary>
@@ -64,7 +76,7 @@ namespace Sensors
                 db.IotSensors.Add(thing);
 
                 db.SaveChanges();
-                
+
                 Console.WriteLine("The inserted sensor's id={0}", sens.sensorID);
 
                 return sens.sensorID;
@@ -73,14 +85,14 @@ namespace Sensors
 
         static public MeasurementType addMeasurementTypeIfNotExists(DataModel db, string text)
         {
-                var iemt = db.MeasurementTypes.Where(x => x.measurementType.Equals(text));
-                if (iemt.Count() > 0)
-                    return iemt.First();
-                
-                var mt=db.MeasurementTypes.Add(new MeasurementType() { measurementType=text }).Entity;
-                Console.WriteLine("MeasurementType '{0}' added ", mt.measurementType);
-                db.SaveChanges();
-                return mt;
+            var iemt = db.MeasurementTypes.Where(x => x.measurementType.Equals(text));
+            if (iemt.Count() > 0)
+                return iemt.First();
+
+            var mt = db.MeasurementTypes.Add(new MeasurementType() { measurementType = text }).Entity;
+            Console.WriteLine("MeasurementType '{0}' added ", mt.measurementType);
+            db.SaveChanges();
+            return mt;
         }
 
         static public Unit addUnitIfNotExists(DataModel db, string unit)
@@ -101,10 +113,10 @@ namespace Sensors
             {
                 var _unit = addUnitIfNotExists(db, unit);
                 var sens = db.Sensors.Where(x => x.sensorID == sensorId).First();
-                var mt = addMeasurementTypeIfNotExists(db,measurementType);
+                var mt = addMeasurementTypeIfNotExists(db, measurementType);
 
-                Measurement m = new Measurement() { timestamp = DateTime.Now, sensorFK = sens, value = value, unitFK = _unit, measurementTypeFK=mt };
-                
+                Measurement m = new Measurement() { timestamp = DateTime.Now, sensorFK = sens, value = value, unitFK = _unit, measurementTypeFK = mt };
+
                 db.Measurements.Add(m);
                 db.SaveChanges();
             }
