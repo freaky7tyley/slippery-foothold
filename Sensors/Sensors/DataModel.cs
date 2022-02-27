@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 
 namespace Sensors
@@ -19,7 +20,7 @@ namespace Sensors
 		public DataModel()
 		{
 			var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-		    DbPath =Path.Join(path, "Sensors.db");
+			DbPath =Path.Join(path, "Sensors.db");
 		}
 
 		protected override void OnConfiguring(DbContextOptionsBuilder options)

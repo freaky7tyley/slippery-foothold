@@ -14,7 +14,7 @@ namespace Sensors
     {
 
 
-        const string celsius = "°C", percent = "%", microgrammpercubicmeter="µg/m3";
+        const string celsius = "°C", percent = "%", microgrammpercubicmeter = "µg/m3";
 
         static int TestMySensorID = -1;
 
