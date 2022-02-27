@@ -32,10 +32,20 @@ namespace Sensors
         {
             using (var db = new DataModel())
             {
-                var sns = db.Sensors.Where(x => x.sensorID == sensorId).First();
+
+                var data = (from i in db.IotSensors
+                            join s in db.Sensors on i.sensorFK equals s
+                            where s.sensorID == sensorId
+                            select new
+                            {
+                                i.url
+                            }.url).First();
+                return data;
+
+   /*             var sns = db.Sensors.Where(x => x.sensorID == sensorId).First();
 
                 return db.IotSensors.Where(x => x.sensorFK.sensorID == sensorId).First().url;
-            }
+     */       }
         }
 
         /// <summary>

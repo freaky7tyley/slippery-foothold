@@ -3,7 +3,7 @@ namespace Sensors
 {
     interface ISensor
     {
-        bool Read(bool printRaw);
+        Task<bool> Read(bool printRaw);
     }
 
     #region Airohrzeug
@@ -81,7 +81,7 @@ namespace Sensors
     {
         protected string? jsonString;
         protected JsonDataStructure? jsonData;
-        abstract protected void GetDataFromSensor();
+        abstract protected Task GetDataFromSensor();
         abstract protected void ParseJsonString();
     }
     #endregion

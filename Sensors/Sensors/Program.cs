@@ -69,7 +69,7 @@ namespace Sensors
 
             for (int i = 0; i < 6; i++)
             {
-                if (climaticSensor.Read())
+                if (climaticSensor.Read().Result)
                 {
                     if(climaticSensor.Temperature.validData)
                         addTemperature(TestMySensorID, climaticSensor.Temperature.data);

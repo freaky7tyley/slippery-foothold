@@ -9,7 +9,7 @@ namespace Sensors
         //bekanntes Problem bei Airrohr, der DHT22 wird nicht immer zuverlässig ausgewertet, dann enthält die Json response KEINE value_type 'temperature' & 'humidity'
 
         string url;
-
+        const string jsonDataPage = "/data.json"; 
 
         public ValueType Temperature { get; private set; }
         public ValueType Humidity { get; private set; }
@@ -19,20 +19,25 @@ namespace Sensors
         public Airohr(string url)
         {
             this.url = url;
+            if (!this.url.EndsWith(jsonDataPage))
+                this.url += jsonDataPage;
+
             Temperature = new ValueType(IDHT22.temp);
             Humidity = new ValueType(IDHT22.hum);
             PM2_5 = new ValueType(ISDS011.fein);
             PM10 = new ValueType(ISDS011.grob);
         }
 
-        protected override async void GetDataFromSensor()
+        protected override async Task GetDataFromSensor()
         {
             HttpClient client = new HttpClient();
             HttpResponseMessage response = await client.GetAsync(url);
             response.EnsureSuccessStatusCode();
             jsonString = await response.Content.ReadAsStringAsync();
         }
-
+        /// <summary>
+        /// zum debuggen während der fahrt ganz praktisch
+        /// </summary>
         void GetDataFromFile()
         {
             using (StreamReader rd = new StreamReader("../../../Airrohr_response_example.json"))
@@ -54,12 +59,12 @@ namespace Sensors
         /// </summary>
         /// <param name="printRaw">Prints the raw json string to the console</param>
         /// <returns>true if data is valid</returns>
-        public bool Read(bool printRaw = false)
+        public async Task<bool> Read(bool printRaw = false)
         {
             try
             {
-                GetDataFromFile();
-                //GetDataFromSensor();
+                //GetDataFromFile();
+                await GetDataFromSensor();
 
                 if (printRaw)
                     Console.WriteLine("this is my data: {0}",jsonString);
