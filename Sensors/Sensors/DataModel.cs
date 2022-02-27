@@ -19,7 +19,7 @@ namespace Sensors
 		public DataModel()
 		{
 			var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-			DbPath = Path.Join(path, "Sensors.db");
+		    DbPath =Path.Join(path, "Sensors.db");
 		}
 
 		protected override void OnConfiguring(DbContextOptionsBuilder options)

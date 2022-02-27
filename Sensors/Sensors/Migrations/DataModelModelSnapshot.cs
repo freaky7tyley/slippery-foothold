@@ -49,6 +49,7 @@ namespace Sensors.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("unitFKunit")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<double>("value")
@@ -124,7 +125,9 @@ namespace Sensors.Migrations
 
                     b.HasOne("Sensors.Unit", "unitFK")
                         .WithMany()
-                        .HasForeignKey("unitFKunit");
+                        .HasForeignKey("unitFKunit")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("measurementTypeFK");
 

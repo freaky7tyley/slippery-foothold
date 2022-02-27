@@ -31,6 +31,7 @@ namespace Sensors
         protected override async Task GetDataFromSensor()
         {
             HttpClient client = new HttpClient();
+            client.Timeout = new TimeSpan(0, 0, seconds: 1);
             HttpResponseMessage response = await client.GetAsync(url);
             response.EnsureSuccessStatusCode();
             jsonString = await response.Content.ReadAsStringAsync();

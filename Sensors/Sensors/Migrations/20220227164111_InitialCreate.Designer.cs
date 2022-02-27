@@ -11,8 +11,8 @@ using Sensors;
 namespace Sensors.Migrations
 {
     [DbContext(typeof(DataModel))]
-    [Migration("20220227151049_Warningfix_notnulltables")]
-    partial class Warningfix_notnulltables
+    [Migration("20220227164111_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -51,6 +51,7 @@ namespace Sensors.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("unitFKunit")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<double>("value")
@@ -126,7 +127,9 @@ namespace Sensors.Migrations
 
                     b.HasOne("Sensors.Unit", "unitFK")
                         .WithMany()
-                        .HasForeignKey("unitFKunit");
+                        .HasForeignKey("unitFKunit")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("measurementTypeFK");
 

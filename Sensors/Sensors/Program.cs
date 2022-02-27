@@ -46,7 +46,7 @@ namespace Sensors
         {
             IotSensor thing = new IotSensor()
             {
-                url = "http://192.168.178.21/data.json",
+                url = "http://192.168.178.21",
             };
            TestMySensorID= DbOperation.addThing(thing, "Airrohr");
 
@@ -54,7 +54,7 @@ namespace Sensors
 
         private static void Main()
         {
-            DbOperation.clearData();
+            //DbOperation.clearData();
 
 #if SWIPE_DB_ON_START
             initialInsertions();

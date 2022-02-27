@@ -49,7 +49,7 @@ namespace Sensors.Migrations
                 columns: table => new
                 {
                     url = table.Column<string>(type: "TEXT", nullable: false),
-                    sensorFKsensorID = table.Column<int>(type: "INTEGER", nullable: false)
+                    sensorFKsensorID = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -58,8 +58,7 @@ namespace Sensors.Migrations
                         name: "FK_IotSensors_Sensors_sensorFKsensorID",
                         column: x => x.sensorFKsensorID,
                         principalTable: "Sensors",
-                        principalColumn: "sensorID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "sensorID");
                 });
 
             migrationBuilder.CreateTable(
