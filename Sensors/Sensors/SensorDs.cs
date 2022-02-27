@@ -14,13 +14,13 @@ namespace Sensors
     {
         public class ValueTupel
         {
-            public string value_type { get; set; }
-            public string value { get; set; }
+            public string value_type { get; set; } = default!;
+            public string value { get; set; } = default!;
         }
 
-        public ValueTupel[] sensordatavalues { get; set; }
-        public string software_version { get; set; }
-        public string age { get; set; }
+        public ValueTupel[]? sensordatavalues { get; set; }
+        public string software_version { get; set; } = default!;
+        public string age { get; set; } = default!;
     }
 
     class ValueType
@@ -39,8 +39,13 @@ namespace Sensors
         {
             try
             {
-                data = Convert.ToDouble(json.sensordatavalues.Where(t => t.value_type.Equals(key)).First().value);
-                validData = true;
+                if (json.sensordatavalues != null)
+                {
+                    data = Convert.ToDouble(json.sensordatavalues.Where(t => t.value_type.Equals(key)).First().value);
+                    validData = true;
+                }
+                else
+                    validData = false;
             }
             catch (Exception)
             {

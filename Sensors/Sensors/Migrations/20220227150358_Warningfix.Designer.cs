@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sensors;
 
@@ -10,9 +11,10 @@ using Sensors;
 namespace Sensors.Migrations
 {
     [DbContext(typeof(DataModel))]
-    partial class DataModelModelSnapshot : ModelSnapshot
+    [Migration("20220227150358_Warningfix")]
+    partial class Warningfix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.2");
@@ -22,7 +24,7 @@ namespace Sensors.Migrations
                     b.Property<string>("url")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("sensorFKsensorID")
+                    b.Property<int>("sensorFKsensorID")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("url");
@@ -49,6 +51,7 @@ namespace Sensors.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("unitFKunit")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<double>("value")
@@ -103,7 +106,9 @@ namespace Sensors.Migrations
                 {
                     b.HasOne("Sensors.Sensor", "sensorFK")
                         .WithMany()
-                        .HasForeignKey("sensorFKsensorID");
+                        .HasForeignKey("sensorFKsensorID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("sensorFK");
                 });
@@ -124,7 +129,9 @@ namespace Sensors.Migrations
 
                     b.HasOne("Sensors.Unit", "unitFK")
                         .WithMany()
-                        .HasForeignKey("unitFKunit");
+                        .HasForeignKey("unitFKunit")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("measurementTypeFK");
 

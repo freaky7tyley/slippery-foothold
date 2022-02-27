@@ -3,25 +3,28 @@ namespace Sensors
 {
     static class DbOperation
     {
-        static public void readMeasurements()
+        static public void printMeasurements()
         {
-            var db = new DataModel();
+            using (var db = new DataModel())
+            {
+                var data = from m in db.Measurements
+                           join e in db.MeasurementTypes on m.measurementTypeFK equals e
+                           join u in db.Units on m.unitFK equals u
+                           join s in db.Sensors on m.sensorFK equals s
+                           select new
+                           {
+                               m.measurementID,
+                               m.timestamp,
+                               m.measurementTypeFK.measurementType,
+                               m.value,
+                               m.unitFK.unit,
+                               m.sensorFK.name 
+                           };
 
-            var data = db.MeasurementTypes
-            .Join(
-                db.Measurements,
-                m => m,
-                y => y.measurementTypeFK,
-                (m, y) => new {m,y})
-            .Join(
-                db.Units,
-                t => t.unitFK,
-                n=>n,
-                (t,n)=> new {}).ToList();
-             
+
                 foreach (var m in data)
-                    Console.WriteLine("{0} {1} {2} {3}", m.measurementID, m.timestamp, m.value, m.measurementType);
-
+                    Console.WriteLine("{0}\t{1}\t{2:dd.MM.yy HH:MM:ss}\t{3}\t{4}\t{5}", m.measurementType, m.measurementID, m.timestamp, m.value, m.unit, m.name);
+            }
         
         }
 
@@ -30,6 +33,7 @@ namespace Sensors
             using (var db = new DataModel())
             {
                 var sns = db.Sensors.Where(x => x.sensorID == sensorId).First();
+
                 return db.IotSensors.Where(x => x.sensorFK.sensorID == sensorId).First().url;
             }
         }
@@ -44,7 +48,6 @@ namespace Sensors
         {
             using (var db = new DataModel())
             {
-                // Create
                 Console.WriteLine("Inserting a new thing and sensor.");
                 var sens = db.Sensors.Add(new Sensor() { name = name }).Entity;
                 thing.sensorFK = sens;
@@ -53,7 +56,6 @@ namespace Sensors
                 db.SaveChanges();
                 
                 Console.WriteLine("The inserted sensor's id={0}", sens.sensorID);
-                Console.WriteLine("{0} Sensors, {1} things", db.Sensors.Count(), db.IotSensors.Count());
 
                 return sens.sensorID;
             }
@@ -108,6 +110,7 @@ namespace Sensors
                 db.Units.RemoveRange(db.Units);
                 db.Sensors.RemoveRange(db.Sensors);
                 db.MeasurementTypes.RemoveRange(db.MeasurementTypes);
+
                 db.SaveChanges();
             }
         }

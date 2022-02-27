@@ -1,5 +1,6 @@
 ﻿
 using Newtonsoft.Json;
+using System.IO;
 
 namespace Sensors
 {
@@ -32,8 +33,19 @@ namespace Sensors
             jsonString = await response.Content.ReadAsStringAsync();
         }
 
+        void GetDataFromFile()
+        {
+            using (StreamReader rd = new StreamReader("../../../Airrohr_response_example.json"))
+            {
+                jsonString = rd.ReadToEnd();
+            }
+       }
+
         protected override void ParseJsonString()
         {
+            if (String.IsNullOrEmpty(jsonString))
+                throw new Exception("jsonString was null");
+
             jsonData = JsonConvert.DeserializeObject<JsonDataStructure>(jsonString);
         }
 
@@ -46,7 +58,8 @@ namespace Sensors
         {
             try
             {
-                GetDataFromSensor();
+                GetDataFromFile();
+                //GetDataFromSensor();
 
                 if (printRaw)
                     Console.WriteLine("this is my data: {0}",jsonString);
@@ -62,12 +75,6 @@ namespace Sensors
                 getTemperatureHumidity();
                 getParticels();
             }
-            catch (InvalidOperationException)
-            {
-                //no sequence, beim fehlerhaften lesen 
-                Console.WriteLine("No data");
-                return false;
-            }
             catch (Exception ex)
             {
                 //no sequence, beim fehlerhaften lesen des angeschlossenen DHT22
@@ -79,17 +86,35 @@ namespace Sensors
 
         public void getTemperatureHumidity()
         {
-            Temperature.parseValueFromJson(jsonData);
-            Humidity.parseValueFromJson(jsonData);
-
-            //throwt bei feherhaftem auslesen des DHT22 (kann u.U. erst nach Stunden wieder ok sein)
-
+            try
+            {
+                //throwt bei feherhaftem auslesen des DHT22 (kann u.U. erst nach Stunden wieder ok sein)
+#pragma warning disable CS8604 // Possible null reference argument.
+                Temperature.parseValueFromJson(jsonData);
+#pragma warning restore CS8604 // Possible null reference argument.
+                Humidity.parseValueFromJson(jsonData);
+            }
+            catch (InvalidOperationException)
+            {
+                //no sequence, beim fehlerhaften lesen 
+                Console.WriteLine("No data");
+            }
         }
 
         public void getParticels()
         {
-            PM2_5.parseValueFromJson(jsonData);
-            PM10.parseValueFromJson(jsonData);
+            try
+            {
+#pragma warning disable CS8604 // Possible null reference argument.
+                PM2_5.parseValueFromJson(jsonData);
+#pragma warning restore CS8604 // Possible null reference argument.
+                PM10.parseValueFromJson(jsonData);
+            }
+            catch (InvalidOperationException)
+            {
+                //no sequence, beim fehlerhaften lesen 
+                Console.WriteLine("No data");
+            }
         }
     }
 }

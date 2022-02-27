@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 
 namespace Sensors
 {
 	public class DataModel : DbContext
 	{
-		public DbSet<Measurement> Measurements { get; set; }
-		public DbSet<Sensor> Sensors { get; set; }
-		public DbSet<IotSensor> IotSensors { get; set; }
-		public DbSet<Unit> Units { get; set; }
-		public DbSet<MeasurementType> MeasurementTypes { get; set; }
+		public DbSet<Measurement> Measurements { get; set; } = default!;
+		public DbSet<Sensor> Sensors { get; set; } = default!;
+		public DbSet<IotSensor> IotSensors { get; set; } = default!;
+		public DbSet<Unit> Units { get; set; } = default!;
+		public DbSet<MeasurementType> MeasurementTypes { get; set; } = default!;
 
 		public string DbPath { get; }
 
@@ -44,21 +45,21 @@ namespace Sensors
         public int measurementID { get; set; }
         public DateTime timestamp { get; set; } 
         public double value { get; set; }
-        public Sensor sensorFK { get; set; }
-		public Unit unitFK { get; set; }
-		public MeasurementType measurementTypeFK { get; set; }
+        public Sensor sensorFK { get; set; } = default!;
+		public Unit unitFK { get; set; } = default!;
+		public MeasurementType measurementTypeFK { get; set; } = default!;
 	}
 
 	public class Unit
     {
 		[Key]
-		public string unit { get; set; }
+		public string unit { get; set; } = default!;
 	}
 
 	public class MeasurementType
 	{
 		[Key]
-		public string measurementType { get; set; }
+		public string measurementType { get; set; } = default!;
 	}
 
 	public class Sensor
@@ -69,7 +70,7 @@ namespace Sensors
 
 	public class IotSensor
 	{
-		public string url { get; set; }
-		public Sensor sensorFK { get; set; }
+		public string url { get; set; } = default!;
+		public Sensor? sensorFK { get; set; }
 	}
 }

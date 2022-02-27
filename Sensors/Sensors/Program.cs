@@ -1,4 +1,4 @@
-﻿//#define SWIPE_DB_ON_START
+﻿#define SWIPE_DB_ON_START
 
 using System;
 using System.Linq;
@@ -60,6 +60,7 @@ namespace Sensors
             initialInsertions();
 #else
             DbOperation.readMeasurements();
+            return;
 #endif
 
             string airrohrUrl = DbOperation.getSensorUrl(sensorId: TestMySensorID);
@@ -81,7 +82,8 @@ namespace Sensors
                 }
                 Thread.Sleep(1000);
             }
-            DbOperation.readMeasurements();
+            DbOperation.printMeasurements();
+            Console.ReadKey();
         }
     }
 }
