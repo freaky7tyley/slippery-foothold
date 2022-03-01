@@ -21,10 +21,10 @@ namespace Sensors
 
 
 		public RaspberryDatabase()
-
 		{
 
 		}
+
 		const string connectionString = $"server={piIp},1433;" +
 				$"database={databaseName};" +
 				$"User ID={piMySQLUser};" +
@@ -40,16 +40,6 @@ namespace Sensors
 				.HasKey(x => x.sensorID);
 
 		}
-
-		//"server=localhost;user id=root;password=root;database=aspnetcore.mariadb"
-
-		//"Data Source=88.88.888.8888, 1433;
-		//Initial Catalog=ManagerZ; I
-		//ntegrated Security=False;User ID=....;Password=....;"
-
-		//Data Source=127.2.3.4\SQLEXPRESS,1433;Network Library=DBMSSOCN;Initial Catalog=dbase;User ID=sa;Password=password
-
-
 	}
 
 	/*MariaDB [heizung]> describe Sensor2Messort;
@@ -70,9 +60,9 @@ namespace Sensors
 		{
 			public int id { get; set; }
 			public DateTime time { get; set; }
-			public String Sensor { get; set; }
-			public String Messort { get; set; }
-			public double Wert { get; set; }
+			public string? Sensor { get; set; }
+			public string? Messort { get; set; }
+			public double? Wert { get; set; }
 			public bool? status { get; set; }
 		}
 
