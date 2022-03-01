@@ -46,8 +46,18 @@ namespace Sensors
 
         private static void Main()
         {
-            //initialInsertions();
 
+            //// Remote DB tests
+
+
+
+            RemoteDataBaseOperation.PrintMesswerte();
+
+            Console.ReadKey();
+            return;
+
+            //// Local DB tests
+            //initialInsertions();
             try
             {
                 TestMySensorID = DbOperation.getIOTthingID(myAirohrUrl);
